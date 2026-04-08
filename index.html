@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .workout-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        .workout-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .exercise-detail {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .completed-day {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .current-day {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        .future-day {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-red-500 to-orange-600 bg-clip-text text-transparent">
+                MAXIMUM GAINZ TRACKER
+            </h1>
+            <p class="text-gray-400 text-lg">14-Day CHEST ANNIHILATION PROGRAM</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="flex justify-between items-center mb-8">
+            <button id="prevDay" class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
+                <i class="fas fa-chevron-left"></i>
+                Previous Day
+            </button>
+            
+            <div class="text-center">
+                <div id="currentDayDisplay" class="text-2xl font-bold mb-1"></div>
+                <div id="currentDateDisplay" class="text-gray-400"></div>
+            </div>
+            
+            <button id="nextDay" class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
+                Next Day
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </nav>
+
+        <!-- Day Progress -->
+        <div class="mb-8">
+            <div class="flex justify-between text-sm mb-2">
+                <span>Program Progress</span>
+                <span id="progressText">Day 1 of 14</span>
+            </div>
+            <div class="w-full bg-gray-700 rounded-full h-3">
+                <div id="progressBar" class="bg-gradient-to-r from-red-500 to-orange-500 h-3 rounded-full transition-all duration-300" style="width: 7.14%"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main id="mainContent">
+            <div class="text-center py-20">
+                <i class="fas fa-dumbbell text-6xl text-gray-600 mb-4"></i>
+                <p class="text-gray-400 text-xl">Loading workout data...</p>
+            </div>
+        </main>
+
+        <!-- Exercise Details Modal -->
+        <div id="exerciseModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-800 rounded-xl p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modalTitle" class="text-2xl font-bold"></h3>
+                    <button id="closeModal" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Workout Data Structure
+        const workoutData = {
+            exercises: {
+                "50 Rep Burn": {
+                    detail: "BRUTAL non-stop rhythmic reps at 1-1-1 tempo. No excuses, no rest, just PURE PAIN.",
+                    purpose: "ANNIHILATE your chest fibers and force MAXIMUM blood flow. Average workouts don't even come close to this intensity."
+                },
+                "The Structural Weld (6-2-1)": {
+                    detail: "6s BRUTAL descent / 2s PAINFUL pause at absolute bottom / 1s EXPLOSIVE drive up. Every rep is WAR.",
+                    purpose: "SHRED your muscle fibers with MAXIMUM tension. This isn't for the weak - this builds MONSTER thickness that average lifters will NEVER achieve."
+                },
+                "Pike Failure": {
+                    detail: "Hips SKY-HIGH in V-shape, feet elevated. Lower head toward floor until your muscles SCREAM for mercy.",
+                    purpose: "DESTROY the clavicular head and build UPPER CHEST that most people can only dream of. Average pushups won't touch these fibers."
+                },
+                "Explosive 15": {
+                    detail: "MAXIMUM EXPLOSIVE force - hands MUST leave the floor every single rep. No half-assed jumps.",
+                    purpose: "ACTIVATE every fast-twitch fiber and bypass pathetic growth plateaus. This is how you build POWER that average gym-goers will never understand."
+                },
+                "Mechanical Drop-Set Ladder": {
+                    detail: "Elevated to BRUTAL failure → Immediate floor failure → Immediate incline failure. NO REST, NO MERCY.",
+                    purpose: "EXTEND beyond normal limits and force EVERY LAST FIBER into hydraulic hypertrophy. This is what separates the BEASTS from the average."
+                },
+                "Hand-Release Finisher": {
+                    detail: "Lay completely flat, lift hands off ground for 1s, then EXPLODE up from a dead stop. No cheating, no stretch reflex.",
+                    purpose: "ELIMINATE all cheating mechanisms and force your muscles to generate PURE STRENGTH. This builds REAL power that average exercises can't touch."
+                },
+                "Max ISO-Hold": {
+                    detail: "Lower to 2cm above floor and hold until your muscles LITERALLY SHUT DOWN. No quitting early.",
+                    purpose: "Create EXTREME intramuscular pressure and expand the muscle belly beyond average limits. This is how you build DEPTH that others can't comprehend."
+                },
+                "Clock Pushups": {
+                    detail: "Every 5 reps, change hand positions. Wide, narrow, diamond, staggered. Keep the intensity MAXIMUM.",
+                    purpose: "ANNIHILATE your chest from EVERY angle and eliminate weak spots. This builds COMPLETE development that average routines miss entirely."
+                },
+                "The Squeeze Finisher": {
+                    detail: "At lockout, try to SLIDE hands toward each other without moving. SQUEEZE until your muscles BURN.",
+                    purpose: "MAXIMIZE peak contraction and sharpen the center line. This creates SEPARATION that average lifters will NEVER achieve."
+                }
+            },
+            days: [
+                {
+                    day: 1,
+                    name: "Base Setup",
+                    date: "Tue",
+                    completed: true,
+                    workout: "2x12 DB Press, 2x12 DB Row, 20 Standard Pushups",
+                    focus: "BRUTAL foundation building - leave average behind"
+                },
+                {
+                    day: 2,
+                    name: "Tempo Intro",
+                    date: "Wed",
+                    completed: true,
+                    workout: "2x10 (4-2-1) + 10-8-6 Quantity Volume",
+                    focus: "TEMPO introduction - precision over average reps"
+                },
+                {
+                    day: 3,
+                    name: "Structural Weld",
+                    date: "Thu",
+                    time: "18:00",
+                    completed: false,
+                    workout: "50 Rep Burn (AM) + 3x10 (6-2-1) Feet Elevated + Pike Failure",
+                    focus: "MAXIMUM tension eccentrics - SHRED the 8mm zone beyond average limits"
+                },
+                {
+                    day: 4,
+                    name: "Hydraulic Burst",
+                    date: "Fri",
+                    time: "18:00",
+                    completed: false,
+                    workout: "Explosive 15 (Hands leave floor) + Drop-Set Ladder (Elevated > Floor > Incline) + Hand-Release",
+                    focus: "EXTREME blood pooling and skin stretch - go beyond average pumps"
+                },
+                {
+                    day: 5,
+                    name: "Density Load",
+                    date: "Sat",
+                    completed: false,
+                    workout: "Weighted Pushups (Backpack) + Max ISO-Holds at the bottom position",
+                    focus: "Build MONSTER thickness - destroy average muscle fibers"
+                },
+                {
+                    day: 6,
+                    name: "Saturation",
+                    date: "Sun",
+                    completed: false,
+                    workout: "4.0L Water + 100 Non-failure Pump Reps + Deep Chest/Shoulder Stretch",
+                    focus: "MAXIMUM cell expansion - flush average waste"
+                },
+                {
+                    day: 7,
+                    name: "Reload Weld",
+                    date: "Mon",
+                    completed: false,
+                    workout: "Max Feet Elevation (6-3-1) + Upper Split Focus (Hands narrow)",
+                    focus: "FORGE the RIDGE - build what average can't"
+                },
+                {
+                    day: 8,
+                    name: "Velocity Peak",
+                    date: "Tue",
+                    completed: false,
+                    workout: "Hand-Release Velocity + Explosive 15 (5 Sets)",
+                    focus: "MAXIMUM neurological activation - bypass average limits"
+                },
+                {
+                    day: 9,
+                    name: "Titan Double",
+                    date: "Wed",
+                    completed: false,
+                    workout: "AM: 100 Rep Burn / PM: Hybrid A+B (Full Failure)",
+                    focus: "TOTAL ANNIHILATION - destroy average plateaus"
+                },
+                {
+                    day: 10,
+                    name: "Tempo Mastery",
+                    date: "Thu",
+                    completed: false,
+                    workout: "Every Rep (6-2-1) + \"Squeeze\" Finisher (Hold top for 2s)",
+                    focus: "PERFECT mind-muscle connection - precision over average lifting"
+                },
+                {
+                    day: 11,
+                    name: "Variable Angles",
+                    date: "Fri",
+                    completed: false,
+                    workout: "Clock Pushups (Staggered hand positions every 5 reps) + Volume Ladder",
+                    focus: "COMPLETE width development - destroy average blind spots"
+                },
+                {
+                    day: 12,
+                    name: "Final Mechanical Failure",
+                    date: "Sat",
+                    completed: false,
+                    workout: "No reps left. All angles to absolute zero capacity",
+                    focus: "FINAL structural destruction - beyond average failure"
+                },
+                {
+                    day: 13,
+                    name: "Dry Loading",
+                    date: "Sun",
+                    completed: false,
+                    workout: "High Carbs/Salt + Taper Water + 100 Light Pump Reps",
+                    focus: "MAXIMUM glycogen loading -超越 average results"
+                },
+                {
+                    day: 14,
+                    name: "THE REVEAL",
+                    date: "Mon",
+                    completed: false,
+                    workout: "Fasted Morning Inspection",
+                    focus: "ULTIMATE REVEAL - +15mm beyond average"
+                }
+            ]
+        };
+
+        let currentDay = 1;
+
+        // Initialize the app
+        function init() {
+            renderDay(currentDay);
+            setupEventListeners();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('prevDay').addEventListener('click', () => {
+                if (currentDay > 1) {
+                    currentDay--;
+                    renderDay(currentDay);
+                }
+            });
+
+            document.getElementById('nextDay').addEventListener('click', () => {
+                if (currentDay < 14) {
+                    currentDay++;
+                    renderDay(currentDay);
+                }
+            });
+
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            document.getElementById('exerciseModal').addEventListener('click', (e) => {
+                if (e.target.id === 'exerciseModal') {
+                    closeModal();
+                }
+            });
+        }
+
+        // Render current day
+        function renderDay(day) {
+            const dayData = workoutData.days.find(d => d.day === day);
+            if (!dayData) return;
+
+            // Update navigation
+            document.getElementById('currentDayDisplay').textContent = `Day ${dayData.day}`;
+            document.getElementById('currentDateDisplay').textContent = `${dayData.date} - ${dayData.name}`;
+            document.getElementById('progressText').textContent = `Day ${dayData.day} of 14`;
+            document.getElementById('progressBar').style.width = `${(dayData.day / 14) * 100}%`;
+
+            // Update navigation buttons
+            document.getElementById('prevDay').disabled = day === 1;
+            document.getElementById('nextDay').disabled = day === 14;
+            document.getElementById('prevDay').classList.toggle('opacity-50', day === 1);
+            document.getElementById('nextDay').classList.toggle('opacity-50', day === 14);
+
+            // Determine card style
+            let cardClass = 'workout-card';
+            if (dayData.completed) {
+                cardClass += ' completed-day';
+            } else if (day === 3) { // Assuming day 3 is current
+                cardClass += ' current-day';
+            } else {
+                cardClass += ' future-day';
+            }
+
+            // Parse workout exercises
+            const exercises = parseWorkoutExercises(dayData.workout);
+
+            // Render main content
+            const mainContent = document.getElementById('mainContent');
+            mainContent.innerHTML = `
+                <div class="${cardClass} rounded-xl p-8 mb-8">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2">Day ${dayData.day}: ${dayData.name}</h2>
+                            <p class="text-xl opacity-90">${dayData.date}${dayData.time ? ' at ' + dayData.time : ''}</p>
+                        </div>
+                        <div class="text-right">
+                            ${dayData.completed ? 
+                                '<span class="bg-green-500 px-4 py-2 rounded-full"><i class="fas fa-trophy mr-2"></i>DOMINATED</span>' : 
+                                day === 3 ? 
+                                '<span class="bg-orange-500 px-4 py-2 rounded-full"><i class="fas fa-fire mr-2"></i>TIME TO WAR</span>' :
+                                '<span class="bg-gray-600 px-4 py-2 rounded-full"><i class="fas fa-bolt mr-2"></i>NEXT TARGET</span>'
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold mb-3">Focus</h3>
+                        <p class="text-lg opacity-90">${dayData.focus}</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold mb-3">Workout</h3>
+                        <div class="space-y-2">
+                            ${exercises.map(exercise => `
+                                <div class="exercise-detail rounded-lg p-4 cursor-pointer hover:bg-white hover:bg-opacity-20 transition-colors" onclick="showExerciseDetails('${exercise.name}')">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-medium">${exercise.name}</span>
+                                        <i class="fas fa-info-circle opacity-70"></i>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    ${dayData.completed ? 
+                        `<div class="bg-green-600 bg-opacity-30 rounded-lg p-4 border border-green-500">
+                            <i class="fas fa-trophy text-2xl mb-2"></i>
+                            <p class="font-semibold">MISSION ACCOMPLISHED - ANNIHILATED!</p>
+                        </div>` : 
+                        day === 3 ?
+                        `<div class="bg-orange-600 bg-opacity-30 rounded-lg p-4 border border-orange-500">
+                            <i class="fas fa-fire text-2xl mb-2"></i>
+                            <p class="font-semibold">TIME FOR WAR - DESTROY TODAY!</p>
+                        </div>` : ''
+                    }
+                </div>
+            `;
+        }
+
+        // Parse workout exercises from text
+        function parseWorkoutExercises(workoutText) {
+            const exercises = [];
+            
+            // Check for specific exercise patterns in order of specificity
+            if (workoutText.includes('50 Rep Burn')) {
+                exercises.push({ name: '50 Rep Burn', description: workoutData.exercises['50 Rep Burn'] });
+            }
+            if (workoutText.includes('Structural Weld') || workoutText.includes('(6-2-1)')) {
+                exercises.push({ name: 'The Structural Weld (6-2-1)', description: workoutData.exercises['The Structural Weld (6-2-1)'] });
+            }
+            if (workoutText.includes('Pike Failure')) {
+                exercises.push({ name: 'Pike Failure', description: workoutData.exercises['Pike Failure'] });
+            }
+            if (workoutText.includes('Explosive 15')) {
+                exercises.push({ name: 'Explosive 15', description: workoutData.exercises['Explosive 15'] });
+            }
+            if (workoutText.includes('Drop-Set Ladder') || workoutText.includes('Drop-Set')) {
+                exercises.push({ name: 'Mechanical Drop-Set Ladder', description: workoutData.exercises['Mechanical Drop-Set Ladder'] });
+            }
+            if (workoutText.includes('Hand-Release')) {
+                exercises.push({ name: 'Hand-Release Finisher', description: workoutData.exercises['Hand-Release Finisher'] });
+            }
+            if (workoutText.includes('ISO-Hold')) {
+                exercises.push({ name: 'Max ISO-Hold', description: workoutData.exercises['Max ISO-Hold'] });
+            }
+            if (workoutText.includes('Clock Pushups')) {
+                exercises.push({ name: 'Clock Pushups', description: workoutData.exercises['Clock Pushups'] });
+            }
+            if (workoutText.includes('Squeeze Finisher') || workoutText.includes('Squeeze')) {
+                exercises.push({ name: 'The Squeeze Finisher', description: workoutData.exercises['The Squeeze Finisher'] });
+            }
+
+            // Add non-specific exercises if no matches found
+            if (exercises.length === 0) {
+                exercises.push({ name: workoutText, description: null });
+            }
+
+            return exercises;
+        }
+
+        // Show exercise details modal
+        function showExerciseDetails(exerciseName) {
+            const exercise = workoutData.exercises[exerciseName];
+            if (!exercise) return;
+
+            document.getElementById('modalTitle').textContent = exerciseName;
+            document.getElementById('modalContent').innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-purple-400">
+                            <i class="fas fa-list-ol mr-2"></i>Detail
+                        </h4>
+                        <p class="opacity-90">${exercise.detail}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-semibold mb-2 text-pink-400">
+                            <i class="fas fa-bullseye mr-2"></i>Purpose
+                        </h4>
+                        <p class="opacity-90">${exercise.purpose}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('exerciseModal').classList.remove('hidden');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('exerciseModal').classList.add('hidden');
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
