@@ -139,7 +139,8 @@
                 {
                     day: 1,
                     name: "Base Setup",
-                    date: "Tue",
+                    date: "Mon",
+                    fullDate: "2025-04-07",
                     completed: true,
                     workout: "2x12 DB Press, 2x12 DB Row, 20 Standard Pushups",
                     focus: "BRUTAL foundation building - leave average behind"
@@ -147,7 +148,8 @@
                 {
                     day: 2,
                     name: "Tempo Intro",
-                    date: "Wed",
+                    date: "Tue",
+                    fullDate: "2025-04-08",
                     completed: true,
                     workout: "2x10 (4-2-1) + 10-8-6 Quantity Volume",
                     focus: "TEMPO introduction - precision over average reps"
@@ -155,16 +157,18 @@
                 {
                     day: 3,
                     name: "Structural Weld",
-                    date: "Thu",
+                    date: "Wed",
+                    fullDate: "2025-04-09",
                     time: "18:00",
                     completed: false,
                     workout: "50 Rep Burn (AM) + 3x10 (6-2-1) Feet Elevated + Pike Failure",
-                    focus: "MAXIMUM tension eccentrics - SHRED the 8mm zone beyond average limits"
+                    focus: "MAXIMUM tension eccentrics - SHRED 8mm zone beyond average limits"
                 },
                 {
                     day: 4,
                     name: "Hydraulic Burst",
-                    date: "Fri",
+                    date: "Thu",
+                    fullDate: "2025-04-10",
                     time: "18:00",
                     completed: false,
                     workout: "Explosive 15 (Hands leave floor) + Drop-Set Ladder (Elevated > Floor > Incline) + Hand-Release",
@@ -173,7 +177,8 @@
                 {
                     day: 5,
                     name: "Density Load",
-                    date: "Sat",
+                    date: "Fri",
+                    fullDate: "2025-04-11",
                     completed: false,
                     workout: "Weighted Pushups (Backpack) + Max ISO-Holds at the bottom position",
                     focus: "Build MONSTER thickness - destroy average muscle fibers"
@@ -181,7 +186,8 @@
                 {
                     day: 6,
                     name: "Saturation",
-                    date: "Sun",
+                    date: "Sat",
+                    fullDate: "2025-04-12",
                     completed: false,
                     workout: "4.0L Water + 100 Non-failure Pump Reps + Deep Chest/Shoulder Stretch",
                     focus: "MAXIMUM cell expansion - flush average waste"
@@ -189,7 +195,8 @@
                 {
                     day: 7,
                     name: "Reload Weld",
-                    date: "Mon",
+                    date: "Sun",
+                    fullDate: "2025-04-13",
                     completed: false,
                     workout: "Max Feet Elevation (6-3-1) + Upper Split Focus (Hands narrow)",
                     focus: "FORGE the RIDGE - build what average can't"
@@ -197,7 +204,8 @@
                 {
                     day: 8,
                     name: "Velocity Peak",
-                    date: "Tue",
+                    date: "Mon",
+                    fullDate: "2025-04-14",
                     completed: false,
                     workout: "Hand-Release Velocity + Explosive 15 (5 Sets)",
                     focus: "MAXIMUM neurological activation - bypass average limits"
@@ -205,7 +213,8 @@
                 {
                     day: 9,
                     name: "Titan Double",
-                    date: "Wed",
+                    date: "Tue",
+                    fullDate: "2025-04-15",
                     completed: false,
                     workout: "AM: 100 Rep Burn / PM: Hybrid A+B (Full Failure)",
                     focus: "TOTAL ANNIHILATION - destroy average plateaus"
@@ -213,7 +222,8 @@
                 {
                     day: 10,
                     name: "Tempo Mastery",
-                    date: "Thu",
+                    date: "Wed",
+                    fullDate: "2025-04-16",
                     completed: false,
                     workout: "Every Rep (6-2-1) + \"Squeeze\" Finisher (Hold top for 2s)",
                     focus: "PERFECT mind-muscle connection - precision over average lifting"
@@ -221,7 +231,8 @@
                 {
                     day: 11,
                     name: "Variable Angles",
-                    date: "Fri",
+                    date: "Thu",
+                    fullDate: "2025-04-17",
                     completed: false,
                     workout: "Clock Pushups (Staggered hand positions every 5 reps) + Volume Ladder",
                     focus: "COMPLETE width development - destroy average blind spots"
@@ -229,7 +240,8 @@
                 {
                     day: 12,
                     name: "Final Mechanical Failure",
-                    date: "Sat",
+                    date: "Fri",
+                    fullDate: "2025-04-18",
                     completed: false,
                     workout: "No reps left. All angles to absolute zero capacity",
                     focus: "FINAL structural destruction - beyond average failure"
@@ -237,7 +249,8 @@
                 {
                     day: 13,
                     name: "Dry Loading",
-                    date: "Sun",
+                    date: "Sat",
+                    fullDate: "2025-04-19",
                     completed: false,
                     workout: "High Carbs/Salt + Taper Water + 100 Light Pump Reps",
                     focus: "MAXIMUM glycogen loading -超越 average results"
@@ -245,7 +258,8 @@
                 {
                     day: 14,
                     name: "THE REVEAL",
-                    date: "Mon",
+                    date: "Sun",
+                    fullDate: "2025-04-20",
                     completed: false,
                     workout: "Fasted Morning Inspection",
                     focus: "ULTIMATE REVEAL - +15mm beyond average"
@@ -292,7 +306,12 @@
 
             // Update navigation
             document.getElementById('currentDayDisplay').textContent = `Day ${dayData.day}`;
-            document.getElementById('currentDateDisplay').textContent = `${dayData.date} - ${dayData.name}`;
+            const formattedDate = new Date(dayData.fullDate).toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+            document.getElementById('currentDateDisplay').textContent = `${formattedDate} - ${dayData.name}`;
             document.getElementById('progressText').textContent = `Day ${dayData.day} of 14`;
             document.getElementById('progressBar').style.width = `${(dayData.day / 14) * 100}%`;
 
@@ -322,7 +341,12 @@
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <h2 class="text-3xl font-bold mb-2">Day ${dayData.day}: ${dayData.name}</h2>
-                            <p class="text-xl opacity-90">${dayData.date}${dayData.time ? ' at ' + dayData.time : ''}</p>
+                            <p class="text-xl opacity-90">${new Date(dayData.fullDate).toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+            })}${dayData.time ? ' at ' + dayData.time : ''}</p>
                         </div>
                         <div class="text-right">
                             ${dayData.completed ? 
