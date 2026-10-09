@@ -389,10 +389,12 @@
             </div>
             <nav class="flex gap-3 mb-1 top-nav">
                 <button onclick="switchTab('archives')" id="tab-archives" class="nav-btn nav-active">Workouts</button>
+                <button onclick="switchTab('log-workout')" id="tab-log-workout" class="nav-btn nav-inactive">Log Workout</button>
             </nav>
             <div class="mobile-nav-dropdown">
                 <select onchange="handleMobileNavChange(this.value)" id="mobile-nav-select">
                     <option value="archives">Workouts</option>
+                    <option value="log-workout">Log Workout</option>
                 </select>
             </div>
         </header>
@@ -449,6 +451,38 @@
                 </div>
             </div>
             <div id="archives-container" class="space-y-12"></div>
+        </div>
+
+        <div id="view-log-workout" class="hidden">
+            <div class="glass rounded-[2rem] p-6 mb-16 shadow-2xl border border-white/5">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-2xl font-black italic text-white uppercase tracking-tighter">Log Workout</h2>
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Submit your 75 HARD workout stats</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleFormDarkMode()" class="bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 px-4 py-2 rounded-xl transition">
+                            Toggle Dark/Light Form
+                        </button>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScUbfHhP4nCogTJ_TnjLo8-VbHHxuUsTBE4EFqr7xseYv2AFQ/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" class="bg-orange-600 hover:bg-orange-500 text-xs font-black uppercase tracking-widest text-white px-4 py-2 rounded-xl transition">
+                            Open Direct ↗
+                        </a>
+                    </div>
+                </div>
+                <div class="w-full overflow-hidden rounded-2xl bg-slate-950/50 p-2 border border-slate-800">
+                    <iframe id="google-form-iframe" 
+                            src="https://docs.google.com/forms/d/e/1FAIpQLScUbfHhP4nCogTJ_TnjLo8-VbHHxuUsTBE4EFqr7xseYv2AFQ/viewform?embedded=true" 
+                            width="100%" 
+                            height="850" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0" 
+                            class="w-full rounded-xl transition-all duration-300"
+                            style="filter: invert(0.9) hue-rotate(180deg); background-color: #ffffff;">
+                        Loading form...
+                    </iframe>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -1989,32 +2023,83 @@
             return `${hrs}:${mins.toString().padStart(2, '0')}`;
         }
 
-        function switchTab(tab) {
-            document.getElementById('view-archives').classList.toggle('hidden', tab !== 'archives');
-            document.getElementById('view-analytics').classList.toggle('hidden', tab !== 'analytics');
-            document.getElementById('view-trends').classList.toggle('hidden', tab !== 'trends');
-            document.getElementById('view-achievements').classList.toggle('hidden', tab !== 'achievements');
-            document.getElementById('view-chemistry').classList.toggle('hidden', tab !== 'chemistry');
-            document.getElementById('view-visualizations').classList.toggle('hidden', tab !== 'visualizations');
-            document.getElementById('view-strength').classList.toggle('hidden', tab !== 'strength');
-            document.getElementById('view-social').classList.toggle('hidden', tab !== 'social');
+        function toggleFormDarkMode() {
+            const iframe = document.getElementById('google-form-iframe');
+            if (!iframe) return;
+            if (iframe.style.filter) {
+                iframe.style.filter = '';
+            } else {
+                iframe.style.filter = 'invert(0.9) hue-rotate(180deg)';
+            }
+        }
 
-            document.getElementById('tab-archives').classList.toggle('nav-active', tab === 'archives');
-            document.getElementById('tab-archives').classList.toggle('nav-inactive', tab !== 'archives');
-            document.getElementById('tab-analytics').classList.toggle('nav-active', tab === 'analytics');
-            document.getElementById('tab-analytics').classList.toggle('nav-inactive', tab !== 'analytics');
-            document.getElementById('tab-trends').classList.toggle('nav-active', tab === 'trends');
-            document.getElementById('tab-trends').classList.toggle('nav-inactive', tab !== 'trends');
-            document.getElementById('tab-achievements').classList.toggle('nav-active', tab === 'achievements');
-            document.getElementById('tab-achievements').classList.toggle('nav-inactive', tab !== 'achievements');
-            document.getElementById('tab-chemistry').classList.toggle('nav-active', tab === 'chemistry');
-            document.getElementById('tab-chemistry').classList.toggle('nav-inactive', tab !== 'chemistry');
-            document.getElementById('tab-visualizations').classList.toggle('nav-active', tab === 'visualizations');
-            document.getElementById('tab-visualizations').classList.toggle('nav-inactive', tab !== 'visualizations');
-            document.getElementById('tab-strength').classList.toggle('nav-active', tab === 'strength');
-            document.getElementById('tab-strength').classList.toggle('nav-inactive', tab !== 'strength');
-            document.getElementById('tab-social').classList.toggle('nav-active', tab === 'social');
-            document.getElementById('tab-social').classList.toggle('nav-inactive', tab !== 'social');
+        function switchTab(tab) {
+            const viewArchives = document.getElementById('view-archives');
+            const viewLogWorkout = document.getElementById('view-log-workout');
+            const viewAnalytics = document.getElementById('view-analytics');
+            const viewTrends = document.getElementById('view-trends');
+            const viewAchievements = document.getElementById('view-achievements');
+            const viewChemistry = document.getElementById('view-chemistry');
+            const viewVisualizations = document.getElementById('view-visualizations');
+            const viewStrength = document.getElementById('view-strength');
+            const viewSocial = document.getElementById('view-social');
+
+            if (viewArchives) viewArchives.classList.toggle('hidden', tab !== 'archives');
+            if (viewLogWorkout) viewLogWorkout.classList.toggle('hidden', tab !== 'log-workout');
+            if (viewAnalytics) viewAnalytics.classList.toggle('hidden', tab !== 'analytics');
+            if (viewTrends) viewTrends.classList.toggle('hidden', tab !== 'trends');
+            if (viewAchievements) viewAchievements.classList.toggle('hidden', tab !== 'achievements');
+            if (viewChemistry) viewChemistry.classList.toggle('hidden', tab !== 'chemistry');
+            if (viewVisualizations) viewVisualizations.classList.toggle('hidden', tab !== 'visualizations');
+            if (viewStrength) viewStrength.classList.toggle('hidden', tab !== 'strength');
+            if (viewSocial) viewSocial.classList.toggle('hidden', tab !== 'social');
+
+            const tabArchives = document.getElementById('tab-archives');
+            const tabLogWorkout = document.getElementById('tab-log-workout');
+            const tabAnalytics = document.getElementById('tab-analytics');
+            const tabTrends = document.getElementById('tab-trends');
+            const tabAchievements = document.getElementById('tab-achievements');
+            const tabChemistry = document.getElementById('tab-chemistry');
+            const tabVisualizations = document.getElementById('tab-visualizations');
+            const tabStrength = document.getElementById('tab-strength');
+            const tabSocial = document.getElementById('tab-social');
+
+            if (tabArchives) {
+                tabArchives.classList.toggle('nav-active', tab === 'archives');
+                tabArchives.classList.toggle('nav-inactive', tab !== 'archives');
+            }
+            if (tabLogWorkout) {
+                tabLogWorkout.classList.toggle('nav-active', tab === 'log-workout');
+                tabLogWorkout.classList.toggle('nav-inactive', tab !== 'log-workout');
+            }
+            if (tabAnalytics) {
+                tabAnalytics.classList.toggle('nav-active', tab === 'analytics');
+                tabAnalytics.classList.toggle('nav-inactive', tab !== 'analytics');
+            }
+            if (tabTrends) {
+                tabTrends.classList.toggle('nav-active', tab === 'trends');
+                tabTrends.classList.toggle('nav-inactive', tab !== 'trends');
+            }
+            if (tabAchievements) {
+                tabAchievements.classList.toggle('nav-active', tab === 'achievements');
+                tabAchievements.classList.toggle('nav-inactive', tab !== 'achievements');
+            }
+            if (tabChemistry) {
+                tabChemistry.classList.toggle('nav-active', tab === 'chemistry');
+                tabChemistry.classList.toggle('nav-inactive', tab !== 'chemistry');
+            }
+            if (tabVisualizations) {
+                tabVisualizations.classList.toggle('nav-active', tab === 'visualizations');
+                tabVisualizations.classList.toggle('nav-inactive', tab !== 'visualizations');
+            }
+            if (tabStrength) {
+                tabStrength.classList.toggle('nav-active', tab === 'strength');
+                tabStrength.classList.toggle('nav-inactive', tab !== 'strength');
+            }
+            if (tabSocial) {
+                tabSocial.classList.toggle('nav-active', tab === 'social');
+                tabSocial.classList.toggle('nav-inactive', tab !== 'social');
+            }
 
             // Sync mobile dropdown with current tab
             syncMobileDropdown();
