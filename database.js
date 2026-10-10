@@ -7,11 +7,11 @@ const GAME_DATABASE = [
     scheduled: false,
     group: "75 HARD Prep Squad",
     players: [
-      { name: "Viking. A", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", totalSteps: "?", floorPress: "?" },
-      { name: "Melwin. A", dips: "?", bench: 77, bicepCurlBar: "?", deadlift: 115, pushups: 40, totalSteps: "?", floorPress: 95 },
-      { name: "Billy. P", dips: 20, bench: 60, bicepCurlBar: 45, deadlift: 110, pushups: 59, totalSteps: "?", floorPress: 85 },
-      { name: "Viggo. H", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: 130, pushups: "?", totalSteps: "?", floorPress: "?" },
-      { name: "Valter. Y", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", totalSteps: "?", floorPress: "?" },
+      { name: "Viking. A", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", floorPress: "?" },
+      { name: "Melwin. A", dips: "?", bench: 77, bicepCurlBar: "?", deadlift: 115, pushups: 40, floorPress: 95 },
+      { name: "Billy. P", dips: 20, bench: 60, bicepCurlBar: 45, deadlift: 110, pushups: 59, floorPress: 85 },
+      { name: "Viggo. H", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: 130, pushups: "?", floorPress: "?" },
+      { name: "Valter. Y", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", floorPress: "?" },
       { name: "Adrian. O", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", totalSteps: "?", floorPress: "?" }
     ]
   },
