@@ -2971,7 +2971,7 @@ Rating ${rating.toFixed(1)} per 15 min – Level: ${rank.title}`;
         }
 
         function updateHard75Timer() {
-            const startDate = new Date(2026, 9, 23, 0, 0, 0); // October 23, 2026
+            const startDate = new Date(2026, 9, 11, 0, 0, 0); // October 11, 2026
             const now = new Date();
             
             const isStarted = now >= startDate;
@@ -2996,7 +2996,7 @@ Rating ${rating.toFixed(1)} per 15 min – Level: ${rank.title}`;
                 if (subtitleEl) subtitleEl.textContent = `DAY ${dayNum} OF 75 • TIME ELAPSED`;
             } else {
                 if (titleEl) titleEl.textContent = "75 HARD - COUNTDOWN";
-                if (subtitleEl) subtitleEl.textContent = "OCTOBER 23, 2026";
+                if (subtitleEl) subtitleEl.textContent = "OCTOBER 11, 2026";
             }
 
             if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
