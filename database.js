@@ -11,7 +11,7 @@ const GAME_DATABASE = [
       { name: "Melwin. A", dips: "?", bench: 77, bicepCurlBar: "?", deadlift: 115, pushups: 40, floorPress: 95, pullUps: "?" },
       { name: "Billy. P", dips: 20, bench: 60, bicepCurlBar: 45, deadlift: 110, pushups: 59, floorPress: 85, pullUps: 13 },
       { name: "Viggo. H", dips: "?", bench: 50, bicepCurlBar: "?", deadlift: 130, pushups: 7, floorPress: "?", pullUps: "?" },
-      { name: "Valter. Y", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", floorPress: "?", pullUps: "?" },
+      { name: "Valter. Y", rekordRunk: "1 minute", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", floorPress: "?", pullUps: "?" },
       { name: "Adrian. O", dips: "?", bench: "?", bicepCurlBar: "?", deadlift: "?", pushups: "?", totalSteps: "?", floorPress: "?", pullUps: "?" }
     ]
   },
